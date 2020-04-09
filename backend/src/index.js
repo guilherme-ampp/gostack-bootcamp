@@ -1,7 +1,9 @@
 const express = require('express');
 const { uuid, isUuid } = require('uuidv4')
+const cors = require('cors');
 
 const app = express();
+app.use(cors());  // for production we need to configure the appropriate origins
 app.use(express.json());
 app.use('/projects/:id', validateProjectId);
 
