@@ -1,4 +1,6 @@
+/* eslint-disable class-methods-use-this */
 import { startOfHour } from 'date-fns';
+import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/Appointment';
 import AppointmentRepository from '../repositories/AppointmentsRepository';
 
@@ -12,7 +14,7 @@ import AppointmentRepository from '../repositories/AppointmentsRepository';
  */
 interface RequestDTO {
     date: Date;
-    provider: string;
+    provider_id: string;
 }
 
 /**
@@ -26,17 +28,17 @@ interface RequestDTO {
  * * Access to the repository of appointments
  */
 class CreateAppointmentService {
-    private appointmentsRepository: AppointmentRepository;
-
-    constructor(appointmentsRepository: AppointmentRepository) {
-        this.appointmentsRepository = appointmentsRepository;
-    }
-
-    public execute({ date, provider }: RequestDTO): Appointment {
+    public async execute({
+        date,
+        provider_id,
+    }: RequestDTO): Promise<Appointment> {
+        const appointmentsRepository = getCustomRepository(
+            AppointmentRepository,
+        );
         // startOfHour will get a date and zero all minutes, seconds and milliseconds of a given date
         const appointmentDate = startOfHour(date);
 
-        const findAppointmentInSameDate = this.appointmentsRepository.findByDate(
+        const findAppointmentInSameDate = await appointmentsRepository.findByDate(
             appointmentDate,
         );
 
@@ -44,10 +46,15 @@ class CreateAppointmentService {
             throw Error(`The time slot is not available: ${date}`);
         }
 
-        const appointment = this.appointmentsRepository.create({
-            provider,
+        // create() will just create an instance of our entity
+        const appointment = appointmentsRepository.create({
+            provider_id,
             date: appointmentDate,
         });
+
+        // save() is the method that will persist it in the DB
+        await appointmentsRepository.save(appointment);
+
         return appointment;
     }
 }

@@ -25,6 +25,7 @@
     "rules": {
         "indent": ["error", 4],
         "no-console": "warn",
+        "@typescript-eslint/camelcase": "off",
         "import/extensions":  [
             "error",
             "ignorePackages",
