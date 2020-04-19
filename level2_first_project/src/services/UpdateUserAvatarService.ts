@@ -4,6 +4,7 @@ import fs from 'fs';
 import { getRepository } from 'typeorm';
 import User from '../models/Users';
 import uploadConfig from '../config/upload';
+import AppError from '../errors/AppError';
 
 interface UpdateAvatarDTO {
     user_id: string;
@@ -23,7 +24,10 @@ class UpdateUserAvatarService {
 
         if (!user) {
             // user does not exist
-            throw new Error('Only authenticated users can change their avatar');
+            throw new AppError(
+                'Only authenticated users can change their avatar',
+                401,
+            );
         }
 
         if (user.avatar) {

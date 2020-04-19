@@ -3,6 +3,7 @@ import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/Appointment';
 import AppointmentRepository from '../repositories/AppointmentsRepository';
+import AppError from '../errors/AppError';
 
 /**
  * Even though, at the start of our project, the set of data
@@ -43,7 +44,7 @@ class CreateAppointmentService {
         );
 
         if (findAppointmentInSameDate) {
-            throw Error(`The time slot is not available: ${date}`);
+            throw new AppError(`The time slot is not available: ${date}`);
         }
 
         // create() will just create an instance of our entity
