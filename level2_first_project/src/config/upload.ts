@@ -2,6 +2,8 @@ import path from 'path';
 import crypto from 'crypto';
 import multer from 'multer';
 
+const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
+
 export default {
     // for now, let's just use our local storage
     // the destination parameter is simply the path where uploaded files will
@@ -10,8 +12,9 @@ export default {
     //   request is the request
     //   file is the uploaded file
     //   callback is supposed to be invoked with the modified filename for saving the uploaded content
+    directory: tmpFolder,
     storage: multer.diskStorage({
-        destination: path.resolve(__dirname, '..', '..', 'tmp'),
+        destination: tmpFolder,
         filename(request, file, callback) {
             const fileHash = crypto.randomBytes(10).toString('HEX');
             const fileName = `${fileHash}-${file.originalname}`;

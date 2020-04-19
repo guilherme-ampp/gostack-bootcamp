@@ -20,6 +20,9 @@ class User {
     @Column() // varchar is the default type
     email: string;
 
+    @Column()
+    avatar: string;
+
     @CreateDateColumn()
     created_at: Date;
 
