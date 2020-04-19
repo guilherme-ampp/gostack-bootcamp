@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import appointmentsRouter from './appointments.routes';
 import userRouter from './users.routes';
+import sessionRouter from './sessions.routes';
 
 // routes has all the http methods we already know
 const routes = Router();
@@ -10,5 +11,6 @@ const routes = Router();
 // to routes defined in the appointmentsRouter object
 routes.use('/appointments', appointmentsRouter);
 routes.use('/users', userRouter);
+routes.use('/sessions', sessionRouter);
 
 export default routes;
