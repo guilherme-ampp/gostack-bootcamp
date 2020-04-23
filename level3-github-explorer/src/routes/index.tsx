@@ -13,7 +13,7 @@ const Routes: React.FC = () => (
   // so we use <BrowserRouter> around our '<Routes/>' component in the App.tsx file
   <Switch>
     <Route path="/" exact component={Dashboard} />
-    <Route path="/repository" component={Repository} />
+    <Route path="/repository/:repository+" component={Repository} />
   </Switch>
 );
 
