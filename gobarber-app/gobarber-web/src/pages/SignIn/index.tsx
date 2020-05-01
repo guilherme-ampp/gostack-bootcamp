@@ -3,7 +3,7 @@ import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import logoImg from '../../assets/logo.svg';
 
@@ -24,6 +24,7 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
     const { signIn } = useAuth();
     const { addToast } = useToast();
+    const history = useHistory();
 
     const formRef = useRef<FormHandles>(null);
     const handleSubmit = useCallback(
@@ -44,6 +45,12 @@ const SignIn: React.FC = () => {
                 });
 
                 await signIn({ email: data.email, password: data.password });
+
+                history.push('/dashboard');
+
+                addToast({
+                    title: 'You are logged in!',
+                });
             } catch (err) {
                 if (err instanceof Yup.ValidationError) {
                     const errors = getValidationErrors(err);
