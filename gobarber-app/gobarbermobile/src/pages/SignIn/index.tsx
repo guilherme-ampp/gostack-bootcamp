@@ -6,6 +6,7 @@ import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
+import { useAuth } from '../../hooks/auth';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -30,34 +31,36 @@ const SignIn: React.FC = () => {
     // and not just react to an event
     const formRef = useRef<FormHandles>(null);
     const passwordInputRef = useRef<TextInput>(null);
+    const { signIn } = useAuth();
 
-    const handleSignIn = useCallback(async (data: SignInFormData) => {
-        try {
-            formRef.current?.setErrors({});
-            const schema = Yup.object().shape({
-                email: Yup.string()
-                    .required('Please enter your registered email')
-                    .email('Please enter a valid email'),
-                password: Yup.string().required('Please enter your password'),
-            });
+    const handleSignIn = useCallback(
+        async (data: SignInFormData) => {
+            try {
+                formRef.current?.setErrors({});
+                const schema = Yup.object().shape({
+                    email: Yup.string()
+                        .required('Please enter your registered email')
+                        .email('Please enter a valid email'),
+                    password: Yup.string().required('Please enter your password'),
+                });
 
-            await schema.validate(data, {
-                abortEarly: false,
-            });
+                await schema.validate(data, {
+                    abortEarly: false,
+                });
 
-            // await signIn({ email: data.email, password: data.password });
+                await signIn({ email: data.email, password: data.password });
+            } catch (err) {
+                if (err instanceof Yup.ValidationError) {
+                    const errors = getValidationErrors(err);
 
-            // history.push('/dashboard');
-        } catch (err) {
-            if (err instanceof Yup.ValidationError) {
-                const errors = getValidationErrors(err);
-
-                formRef.current?.setErrors(errors);
-                return;
+                    formRef.current?.setErrors(errors);
+                    return;
+                }
+                Alert.alert('Error authenticating user', 'Please try again later');
             }
-            Alert.alert('Error authenticating user', 'Please try again later');
-        }
-    }, []);
+        },
+        [signIn],
+    );
 
     return (
         <KeyboardAvoidingView
