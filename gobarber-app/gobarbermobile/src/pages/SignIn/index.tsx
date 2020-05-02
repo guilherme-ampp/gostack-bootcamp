@@ -1,11 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import {
-    Image,
-    View,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-} from 'react-native';
+import { Image, View, KeyboardAvoidingView, Platform, ScrollView, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -28,6 +22,7 @@ const SignIn: React.FC = () => {
     // use must use References when we need to programatically control it
     // and not just react to an event
     const formRef = useRef<FormHandles>(null);
+    const passwordInputRef = useRef<TextInput>(null);
     const handleSignIn = useCallback((data: object) => {
         console.log(data);
     }, []);
@@ -37,10 +32,7 @@ const SignIn: React.FC = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             enabled
         >
-            <ScrollView
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={{ flex: 1 }}
-            >
+            <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flex: 1 }}>
                 <Container>
                     <Image source={logoImg} />
 
@@ -48,11 +40,28 @@ const SignIn: React.FC = () => {
                         <Title>Login</Title>
                     </View>
                     <Form onSubmit={handleSignIn} ref={formRef}>
-                        <Input name="email" icon="mail" placeholder="Email" />
                         <Input
+                            autoCorrect={false}
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            name="email"
+                            icon="mail"
+                            placeholder="Email"
+                            returnKeyType="next"
+                            onSubmitEditing={() => {
+                                passwordInputRef.current?.focus();
+                            }}
+                        />
+                        <Input
+                            secureTextEntry
+                            ref={passwordInputRef}
                             name="password"
                             icon="lock"
                             placeholder="Password"
+                            returnKeyType="send"
+                            onSubmitEditing={() => {
+                                formRef.current?.submitForm();
+                            }}
                         />
                         <Button
                             onPress={() => {
@@ -64,9 +73,7 @@ const SignIn: React.FC = () => {
                     </Form>
 
                     <ForgotPassword onPress={() => {}}>
-                        <ForgotPasswordText>
-                            Forgot password?
-                        </ForgotPasswordText>
+                        <ForgotPasswordText>Forgot password?</ForgotPasswordText>
                     </ForgotPassword>
                 </Container>
             </ScrollView>
@@ -77,9 +84,7 @@ const SignIn: React.FC = () => {
                 }}
             >
                 <Icon name="log-in" size={20} color="#ff9000" />
-                <CreateAccountButtonText>
-                    Create account
-                </CreateAccountButtonText>
+                <CreateAccountButtonText>Create account</CreateAccountButtonText>
             </CreateAccountButton>
         </KeyboardAvoidingView>
     );

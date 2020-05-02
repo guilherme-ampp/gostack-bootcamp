@@ -1,11 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import {
-    Image,
-    View,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-} from 'react-native';
+import { Image, View, KeyboardAvoidingView, Platform, ScrollView, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -14,12 +8,7 @@ import { FormHandles } from '@unform/core';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import logoImg from '../../assets/logo.png';
-import {
-    Container,
-    Title,
-    BackToSignInButtonText,
-    BackToSignInButton,
-} from './styles';
+import { Container, Title, BackToSignInButtonText, BackToSignInButton } from './styles';
 
 const SignUp: React.FC = () => {
     const navigation = useNavigation();
@@ -27,6 +16,8 @@ const SignUp: React.FC = () => {
     const handleSubmit = useCallback((data: object) => {
         console.log(data);
     }, []);
+    const emailInputRef = useRef<TextInput>(null);
+    const passwordInputRef = useRef<TextInput>(null);
 
     return (
         <KeyboardAvoidingView
@@ -34,10 +25,7 @@ const SignUp: React.FC = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             enabled
         >
-            <ScrollView
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={{ flex: 1 }}
-            >
+            <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flex: 1 }}>
                 <Container>
                     <Image source={logoImg} />
 
@@ -45,12 +33,40 @@ const SignUp: React.FC = () => {
                         <Title>Sign Up</Title>
                     </View>
                     <Form ref={formRef} onSubmit={handleSubmit}>
-                        <Input name="name" icon="user" placeholder="Name" />
-                        <Input name="email" icon="mail" placeholder="Email" />
                         <Input
+                            autoCorrect
+                            autoCapitalize="words"
+                            name="name"
+                            icon="user"
+                            placeholder="Name"
+                            returnKeyType="next"
+                            onSubmitEditing={() => {
+                                emailInputRef.current?.focus();
+                            }}
+                        />
+                        <Input
+                            ref={emailInputRef}
+                            autoCorrect={false}
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            name="email"
+                            icon="mail"
+                            placeholder="Email"
+                            returnKeyType="next"
+                            onSubmitEditing={() => {
+                                passwordInputRef.current?.focus();
+                            }}
+                        />
+                        <Input
+                            secureTextEntry
+                            ref={passwordInputRef}
                             name="password"
                             icon="lock"
                             placeholder="Password"
+                            returnKeyType="send"
+                            onSubmitEditing={() => {
+                                formRef.current?.submitForm();
+                            }}
                         />
                         <Button
                             onPress={() => {
