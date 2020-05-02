@@ -59,6 +59,7 @@ const SignIn: React.FC = () => {
                             icon="lock"
                             placeholder="Password"
                             returnKeyType="send"
+                            textContentType="newPassword"
                             onSubmitEditing={() => {
                                 formRef.current?.submitForm();
                             }}
