@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
     Image,
     View,
@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import { Form } from '@unform/mobile';
+import { FormHandles } from '@unform/core';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -23,6 +25,12 @@ import {
 
 const SignIn: React.FC = () => {
     const navigation = useNavigation();
+    // use must use References when we need to programatically control it
+    // and not just react to an event
+    const formRef = useRef<FormHandles>(null);
+    const handleSignIn = useCallback((data: object) => {
+        console.log(data);
+    }, []);
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -39,15 +47,21 @@ const SignIn: React.FC = () => {
                     <View>
                         <Title>Login</Title>
                     </View>
-                    <Input name="email" icon="mail" placeholder="Email" />
-                    <Input name="password" icon="lock" placeholder="Password" />
-                    <Button
-                        onPress={() => {
-                            console.log('');
-                        }}
-                    >
-                        Sign in
-                    </Button>
+                    <Form onSubmit={handleSignIn} ref={formRef}>
+                        <Input name="email" icon="mail" placeholder="Email" />
+                        <Input
+                            name="password"
+                            icon="lock"
+                            placeholder="Password"
+                        />
+                        <Button
+                            onPress={() => {
+                                formRef.current?.submitForm();
+                            }}
+                        >
+                            Sign in
+                        </Button>
+                    </Form>
 
                     <ForgotPassword onPress={() => {}}>
                         <ForgotPasswordText>
