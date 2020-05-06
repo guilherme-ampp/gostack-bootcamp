@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { getRepository } from 'typeorm';
 import { hashSync, hash } from 'bcryptjs';
-import User from '../models/Users';
-import AppError from '../errors/AppError';
+import User from '@modules/users/infra/typeorm/entities/Users';
+import AppError from '@shared/errors/AppError';
 
 interface UserDTO {
     name: string;

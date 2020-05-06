@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this */
 import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
-import Appointment from '../models/Appointment';
-import AppointmentRepository from '../repositories/AppointmentsRepository';
-import AppError from '../errors/AppError';
+import AppointmentRepository from '@modules/appointments/repositories/AppointmentsRepository';
+import AppError from '@shared/errors/AppError';
+import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
 /**
  * Even though, at the start of our project, the set of data

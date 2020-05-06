@@ -2,9 +2,9 @@
 import path from 'path';
 import fs from 'fs';
 import { getRepository } from 'typeorm';
-import User from '../models/Users';
-import uploadConfig from '../config/upload';
-import AppError from '../errors/AppError';
+import uploadConfig from '@config/upload';
+import AppError from '@shared/errors/AppError';
+import User from '@modules/users/infra/typeorm/entities/Users';
 
 interface UpdateAvatarDTO {
     user_id: string;
