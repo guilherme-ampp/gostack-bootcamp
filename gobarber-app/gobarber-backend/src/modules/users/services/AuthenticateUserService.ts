@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-constructor */
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import { inject, injectable } from 'tsyringe';
 import User from '@modules/users/infra/typeorm/entities/Users';
 import authConfig from '@config/auth';
 import AppError from '@shared/errors/AppError';
@@ -17,8 +18,12 @@ interface IAuthenticatedUserDTO {
     token: string;
 }
 
+@injectable()
 class AuthenticateUserService {
-    constructor(private usersRepository: IUsersRepository) {}
+    constructor(
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository,
+    ) {}
 
     public async execute({
         email,

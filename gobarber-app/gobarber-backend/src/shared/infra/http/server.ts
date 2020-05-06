@@ -7,6 +7,8 @@ import '@shared/infra/typeorm'; // we just need to execute the file! - Python st
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
 
+import '@shared/container';
+
 const app = express();
 app.use(cors());
 app.use(express.json());

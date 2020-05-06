@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-constructor */
 /* eslint-disable class-methods-use-this */
+import { inject, injectable } from 'tsyringe';
 import path from 'path';
 import fs from 'fs';
 import uploadConfig from '@config/upload';
@@ -12,8 +13,12 @@ interface IUpdateAvatarDTO {
     avatarFilename: string;
 }
 
+@injectable()
 class UpdateUserAvatarService {
-    constructor(private usersRepository: IUsersRepository) {}
+    constructor(
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository,
+    ) {}
 
     public async execute({
         user_id,
