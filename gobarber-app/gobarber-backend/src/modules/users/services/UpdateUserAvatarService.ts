@@ -1,26 +1,27 @@
+/* eslint-disable no-useless-constructor */
 /* eslint-disable class-methods-use-this */
 import path from 'path';
 import fs from 'fs';
-import { getRepository } from 'typeorm';
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/Users';
+import IUsersRepository from '../repositories/IUsersRepository';
 
-interface UpdateAvatarDTO {
+interface IUpdateAvatarDTO {
     user_id: string;
     avatarFilename: string;
 }
 
 class UpdateUserAvatarService {
+    constructor(private usersRepository: IUsersRepository) {}
+
     public async execute({
         user_id,
         avatarFilename,
-    }: UpdateAvatarDTO): Promise<User> {
-        const userRepository = getRepository(User);
-
+    }: IUpdateAvatarDTO): Promise<User> {
         // it is important for this service not to assume the user validation
         // happened before this method - so we do it again
-        const user = await userRepository.findOne(user_id);
+        const user = await this.usersRepository.findById(user_id);
 
         if (!user) {
             // user does not exist
@@ -46,7 +47,7 @@ class UpdateUserAvatarService {
         }
 
         user.avatar = avatarFilename;
-        await userRepository.save(user);
+        await this.usersRepository.save(user);
         return user;
     }
 }

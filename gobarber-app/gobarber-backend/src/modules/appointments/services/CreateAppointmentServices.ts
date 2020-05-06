@@ -1,9 +1,9 @@
+/* eslint-disable no-useless-constructor */
 /* eslint-disable class-methods-use-this */
 import { startOfHour } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
-import AppointmentRepository from '@modules/appointments/repositories/AppointmentsRepository';
 import AppError from '@shared/errors/AppError';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
+import IAppointmentsRepository from '../repositories/IAppointementsRepository';
 
 /**
  * Even though, at the start of our project, the set of data
@@ -13,7 +13,7 @@ import Appointment from '@modules/appointments/infra/typeorm/entities/Appointmen
  * Prematurely optimizing your code might lead to unexpected hindrances
  * in flexibility
  */
-interface RequestDTO {
+interface IRequestDTO {
     date: Date;
     provider_id: string;
 }
@@ -29,17 +29,16 @@ interface RequestDTO {
  * * Access to the repository of appointments
  */
 class CreateAppointmentService {
+    constructor(private appointmentsRepository: IAppointmentsRepository) {}
+
     public async execute({
         date,
         provider_id,
-    }: RequestDTO): Promise<Appointment> {
-        const appointmentsRepository = getCustomRepository(
-            AppointmentRepository,
-        );
+    }: IRequestDTO): Promise<Appointment> {
         // startOfHour will get a date and zero all minutes, seconds and milliseconds of a given date
         const appointmentDate = startOfHour(date);
 
-        const findAppointmentInSameDate = await appointmentsRepository.findByDate(
+        const findAppointmentInSameDate = await this.appointmentsRepository.findByDate(
             appointmentDate,
         );
 
@@ -48,13 +47,10 @@ class CreateAppointmentService {
         }
 
         // create() will just create an instance of our entity
-        const appointment = appointmentsRepository.create({
+        const appointment = await this.appointmentsRepository.create({
             provider_id,
             date: appointmentDate,
         });
-
-        // save() is the method that will persist it in the DB
-        await appointmentsRepository.save(appointment);
 
         return appointment;
     }
