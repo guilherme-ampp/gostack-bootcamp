@@ -9,25 +9,25 @@ import {
 @Entity('users')
 class User {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id!: string;
 
     @Column() // varchar is the default type
-    name: string;
+    name!: string;
 
     @Column() // varchar is the default type
-    password: string;
+    password!: string;
 
     @Column() // varchar is the default type
-    email: string;
+    email!: string;
 
     @Column()
-    avatar: string;
+    avatar!: string;
 
     @CreateDateColumn()
-    created_at: Date;
+    created_at!: Date;
 
     @UpdateDateColumn()
-    updated_at: Date;
+    updated_at!: Date;
 }
 
 export default User;

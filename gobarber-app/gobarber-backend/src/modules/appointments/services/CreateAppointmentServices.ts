@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-constructor */
 /* eslint-disable class-methods-use-this */
+import 'reflect-metadata';
 import { startOfHour } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';

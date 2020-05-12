@@ -15,23 +15,23 @@ import User from '@modules/users/infra/typeorm/entities/Users';
 @Entity('appointments')
 class Appointment {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id!: string;
 
     @Column()
-    provider_id: string;
+    provider_id!: string;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'provider_id' })
-    provider: User;
+    provider!: User;
 
     @Column('timestamp with time zone') // pass the type
-    date: Date;
+    date!: Date;
 
     @CreateDateColumn()
-    created_at: Date;
+    created_at!: Date;
 
     @UpdateDateColumn()
-    updated_at: Date;
+    updated_at!: Date;
 }
 
 export default Appointment;
